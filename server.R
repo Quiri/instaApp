@@ -4,32 +4,8 @@ library(rjson)
 library(RCurl)
 library(googleVis)
 
-# OAauth data
-#app_name <- "Internet Addiction"
-#client_id <- "a6dc4418d00148aeb6769e2238f88e0f"
-#client_secret <- "680a2a6a01a24d3a8dd8bc900be0f34f"
-#scope <- "basic"
-#token <- "224971151.a6dc441.3d040b719de64c84ab270cd0db89a571"
-
-#ig_oauth_ia <- data.frame(app_name, client_id, client_secret, token,
-#stringsAsFactors = FALSE)
-#save(ig_oauth_ia, file = "ig_oauth_ia")
 load("ig_oauth_ia")
 token <- ig_oauth_ia$token
-
-
-# Create instagram app
-# instagram <- oauth_endpoint(
-# authorize = "https://api.instagram.com/oauth/authorize",
-# access = "https://api.instagram.com/oauth/access_token")
-# myapp <- oauth_app(app_name, client_id, client_secret)
-
-# Authentificate
-# ig_oauth <- oauth2.0_token(instagram, myapp,scope="basic", 
-#type = "application/x-www-form-urlencoded", 
-#cache=FALSE)
-#tmp <- strsplit(toString(names(ig_oauth$credentials)), '"')
-#token <- tmp[[1]][4]
 
 shinyServer(
     function(input, output) {
