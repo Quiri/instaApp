@@ -3,6 +3,7 @@ library(httr)
 library(rjson)
 library(RCurl)
 library(googleVis)
+library(dplyr)
 
 load("ig_oauth_ia")
 token <- ig_oauth_ia$token
@@ -15,8 +16,10 @@ shinyServer(
         #progress$set(message="Loading maps/data", value=0)
 
         # Use search function to search for username (and get id)
-        observeEvent(input$goButton, {
-            user_name <- input$user
+        df <- reactive({
+            input$goButton
+            user_name <- isolate(input$user)
+            
             user_search <- fromJSON(getURL(paste('https://api.instagram.com/v1/users/search?q=', 
                                                  user_name,'&access_token=', token, sep="")), 
                                     unexpected.escape = "keep")
@@ -58,17 +61,18 @@ shinyServer(
             
             # Create latlong variable for gvisMap
             df$latlong <- paste(df$lat, df$long, sep = ":")
-        
+            df
         })
         
-        output$view <- renderGvis({
-            gvisMap(df, locationvar = "latlong" , tipvar = "date", 
-                    options=list(showTip=TRUE, 
-                                 showLine=TRUE, 
-                                 enableScrollWheel=TRUE,
-                                 mapType='terrain', 
-                                 useMapTypeControl=TRUE))
-        })
+        
+          output$view <- renderGvis({
+              gvisMap(df(), locationvar = "latlong" , tipvar = "date", 
+                      options=list(showTip=TRUE, 
+                                   showLine=TRUE, 
+                                   enableScrollWheel=TRUE,
+                                   mapType='terrain', 
+                                   useMapTypeControl=TRUE))
+          })
         
         # Turn off progress bar ---------------------------------------------------
         
